@@ -1,0 +1,14 @@
+{
+  "actorSpecification": 1,
+  "name": "remote-jobs-feed",
+  "title": "Remote Jobs API: RemoteOK, Arbeitnow | $2/1K",
+  "description": "Public remote-job JSON from RemoteOK and Arbeitnow in one feed. Title, company, location, remote flag, tags, salary, URL, posted date, id. No login, no HTML scrape, no proxies. $2 per 1,000 jobs.",
+  "version": "0.1",
+  "input": "./input_schema.json",
+  "dockerfile": "../Dockerfile",
+  "readme": "../README.md",
+  "output": "./output_schema.json",
+  "storages": {
+    "dataset": "./dataset_schema.json"
+  }
+}

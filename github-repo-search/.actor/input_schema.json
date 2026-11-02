@@ -1,0 +1,48 @@
+{
+  "title": "GitHub Repo Search input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "queries": {
+      "title": "Search queries",
+      "type": "array",
+      "description": "GitHub search syntax, e.g. topic:mcp stars:>50, created:>2026-10-01 language:Rust, pushed:>2026-09-01 stars:>100. Same qualifiers as github.com/search.",
+      "editor": "stringList",
+      "prefill": [
+        "topic:mcp stars:>50"
+      ],
+      "default": [
+        "topic:mcp stars:>50"
+      ]
+    },
+    "sort": {
+      "title": "Sort",
+      "type": "string",
+      "description": "stars | updated | forks",
+      "enum": [
+        "stars",
+        "updated",
+        "forks"
+      ],
+      "default": "stars"
+    },
+    "maxReposPerQuery": {
+      "title": "Max repos per query",
+      "type": "integer",
+      "description": "Capped at GitHub Search API limit of 1000 results per query. 0 = 1000.",
+      "default": 200,
+      "minimum": 0,
+      "maximum": 1000
+    },
+    "token": {
+      "title": "GitHub token (optional)",
+      "type": "string",
+      "description": "Personal access token (classic or fine-grained with public_repo read). Raises Search rate limit from 10 to 30 req/min. Leave empty for unauthenticated.",
+      "editor": "textfield",
+      "isSecret": true
+    }
+  },
+  "required": [
+    "queries"
+  ]
+}

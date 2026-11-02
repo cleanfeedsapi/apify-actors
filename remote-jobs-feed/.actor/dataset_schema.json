@@ -1,0 +1,38 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "source": { "type": "string", "description": "remoteok | arbeitnow" },
+      "title": { "type": ["string", "null"] },
+      "company": { "type": ["string", "null"] },
+      "location": { "type": ["string", "null"] },
+      "remote": { "type": "boolean" },
+      "tags": { "type": "array", "items": { "type": "string" } },
+      "salary": { "type": ["string", "null"] },
+      "url": { "type": ["string", "null"], "description": "Public job / apply URL" },
+      "source_url": { "type": ["string", "null"], "description": "Attribution URL on the originating board (follow-link back)" },
+      "posted_at": { "type": ["string", "null"], "description": "ISO 8601" },
+      "id": { "type": ["string", "null"], "description": "Board-side job id, stable across runs" },
+      "error": { "type": "string", "description": "Present only on a failed-source row" }
+    },
+    "required": ["source"]
+  },
+  "views": {
+    "overview": {
+      "title": "Jobs",
+      "transformation": {
+        "fields": ["source", "company", "title", "location", "remote", "salary", "posted_at", "url"]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "url": { "label": "Apply", "format": "link" },
+          "posted_at": { "label": "Posted", "format": "date" },
+          "source": { "label": "Board" }
+        }
+      }
+    }
+  }
+}

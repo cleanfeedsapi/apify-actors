@@ -1,0 +1,38 @@
+{
+  "title": "Remote Jobs Feed input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "sources": {
+      "title": "Sources",
+      "type": "array",
+      "editor": "stringList",
+      "prefill": [
+        "remoteok",
+        "arbeitnow"
+      ],
+      "default": [
+        "remoteok",
+        "arbeitnow"
+      ],
+      "description": "Which boards to read: remoteok, arbeitnow (any subset)."
+    },
+    "search": {
+      "title": "Search",
+      "type": "string",
+      "default": "",
+      "editor": "textfield",
+      "description": "Optional case-insensitive substring filter on title/company/tags."
+    },
+    "maxJobsPerSource": {
+      "title": "Max jobs per source",
+      "type": "integer",
+      "description": "0 = all",
+      "default": 0,
+      "minimum": 0
+    }
+  },
+  "required": [
+    "sources"
+  ]
+}

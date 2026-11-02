@@ -1,0 +1,14 @@
+{
+  "actorSpecification": 1,
+  "name": "github-repo-search",
+  "title": "GitHub Repo Search: Topic / Language / Date | $2/1K",
+  "description": "Official GitHub Search API → new and trending public repos by topic, language, or created:>date window. Stars, forks, license, topics, owner. Optional token for higher rate limit. No HTML scrape, no proxies. $2 per 1,000 repos.",
+  "version": "0.1",
+  "input": "./input_schema.json",
+  "dockerfile": "../Dockerfile",
+  "readme": "../README.md",
+  "output": "./output_schema.json",
+  "storages": {
+    "dataset": "./dataset_schema.json"
+  }
+}

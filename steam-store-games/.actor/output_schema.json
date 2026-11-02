@@ -1,0 +1,19 @@
+{
+  "actorOutputSchemaVersion": 1,
+  "title": "Steam Store Games output",
+  "description": "One row per Steam app with storefront details.",
+  "properties": {
+    "apps": {
+      "type": "string",
+      "title": "Apps",
+      "description": "Default dataset with all app rows.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items"
+    },
+    "summary": {
+      "type": "string",
+      "title": "Summary",
+      "description": "Key-value store SUMMARY record.",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/SUMMARY"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "title": "Steam Store Games input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "appIds": {
+      "title": "App IDs",
+      "type": "array",
+      "description": "Optional Steam app IDs to fetch directly (e.g. 730, 570). Combined with search/listing results, then capped by maxApps.",
+      "editor": "stringList",
+      "default": []
+    },
+    "search": {
+      "title": "Search",
+      "type": "string",
+      "description": "Optional store search term (store.steampowered.com/api/storesearch).",
+      "editor": "textfield",
+      "default": ""
+    },
+    "listing": {
+      "title": "Listing",
+      "type": "string",
+      "description": "Optional storefront listing: topsellers, new, or specials. Empty string skips listing (unless appIds/search also empty — then topsellers is used).",
+      "editor": "select",
+      "enum": ["topsellers", "new", "specials", ""],
+      "default": "topsellers"
+    },
+    "maxApps": {
+      "title": "Max apps",
+      "type": "integer",
+      "description": "Maximum apps to resolve and fetch details for.",
+      "default": 100,
+      "minimum": 1
+    },
+    "cc": {
+      "title": "Country code",
+      "type": "string",
+      "description": "Steam store country/currency code (cc=), e.g. us, pl, de, gb.",
+      "editor": "textfield",
+      "default": "us"
+    }
+  }
+}

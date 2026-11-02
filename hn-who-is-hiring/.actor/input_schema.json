@@ -1,0 +1,38 @@
+{
+  "title": "HN Who Is Hiring input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "kind": {
+      "title": "Thread kind",
+      "type": "string",
+      "description": "Only company posts ('Who is hiring?'). Job-seeker threads are intentionally not supported: they contain personal data.",
+      "enum": [
+        "hiring"
+      ],
+      "default": "hiring",
+      "editor": "select"
+    },
+    "thread": {
+      "title": "Thread",
+      "type": "string",
+      "description": "\"latest\" (resolve via whoishiring user) or a numeric HN item id for a specific monthly thread.",
+      "default": "latest",
+      "editor": "textfield"
+    },
+    "maxComments": {
+      "title": "Max comments",
+      "type": "integer",
+      "description": "0 = all top-level comments on the thread.",
+      "default": 0,
+      "minimum": 0
+    },
+    "query": {
+      "title": "Filter query",
+      "type": "string",
+      "description": "Case-insensitive substring filter on comment text. Empty = no filter.",
+      "default": "",
+      "editor": "textfield"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "actorSpecification": 1,
+  "name": "ats-jobs-feed",
+  "title": "ATS Jobs API: Greenhouse, Lever, Ashby, Workday +2 | $2/1K",
+  "description": "Official/public job-board JSON from Greenhouse, Lever, Ashby, Workday, SmartRecruiters and Recruitee in one feed. Pass source:slug or paste the careers URL. Title, location, department, apply URL, dates, id. No login, no HTML scrape, no proxies. $2 per 1,000 jobs.",
+  "version": "0.1",
+  "input": "./input_schema.json",
+  "dockerfile": "../Dockerfile",
+  "readme": "../README.md",
+  "output": "./output_schema.json",
+  "storages": {
+    "dataset": "./dataset_schema.json"
+  }
+}

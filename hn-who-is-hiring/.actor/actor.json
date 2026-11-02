@@ -1,0 +1,14 @@
+{
+  "actorSpecification": 1,
+  "name": "hn-who-is-hiring",
+  "title": "HN Who Is Hiring Jobs API | $2/1K",
+  "description": "Structured jobs from Hacker News monthly Who is hiring? threads via the official Firebase API. Company, role, location, remote, salary hints, links, raw text. No HTML scrape, no login, no proxies. $2 per 1,000 jobs.",
+  "version": "0.1",
+  "input": "./input_schema.json",
+  "dockerfile": "../Dockerfile",
+  "readme": "../README.md",
+  "output": "./output_schema.json",
+  "storages": {
+    "dataset": "./dataset_schema.json"
+  }
+}

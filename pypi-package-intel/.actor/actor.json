@@ -1,0 +1,14 @@
+{
+  "actorSpecification": 1,
+  "name": "pypi-package-intel",
+  "title": "PyPI + npm Package Intel API | $2/1K",
+  "description": "Official PyPI JSON API and npm registry metadata in one feed: version, license, deps count, release dates, optional download counts. Pass package names and ecosystem pypi|npm|both. No HTML scrape, no login, no proxies. $2 per 1,000 packages.",
+  "version": "0.1",
+  "input": "./input_schema.json",
+  "dockerfile": "../Dockerfile",
+  "readme": "../README.md",
+  "output": "./output_schema.json",
+  "storages": {
+    "dataset": "./dataset_schema.json"
+  }
+}

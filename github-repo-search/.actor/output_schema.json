@@ -1,0 +1,19 @@
+{
+  "actorOutputSchemaVersion": 1,
+  "title": "GitHub Repo Search output",
+  "description": "One row per repository matching a search query. A failed query yields one row with an error field.",
+  "properties": {
+    "repos": {
+      "type": "string",
+      "title": "Repos",
+      "description": "Default dataset with all repo rows (query, full_name, url, description, language, stars, forks, open_issues, topics, license, dates, archived, owner, owner_type).",
+      "template": "{{links.apiDefaultDatasetUrl}}/items"
+    },
+    "summary": {
+      "type": "string",
+      "title": "Summary",
+      "description": "Key-value store record SUMMARY: {queries, repos} counts for the run.",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/SUMMARY"
+    }
+  }
+}

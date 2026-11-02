@@ -1,0 +1,33 @@
+{
+  "title": "ATS Jobs Feed input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "boards": {
+      "title": "Boards",
+      "type": "array",
+      "description": "List of source:slug (greenhouse:stripe, lever:spotify, ashby:ramp, workday:adobe.wd5/external_experienced, smartrecruiters:InPost, recruitee:prisma) or just paste careers URLs (boards.greenhouse.io/..., jobs.lever.co/..., jobs.ashbyhq.com/..., *.myworkdayjobs.com/..., jobs.smartrecruiters.com/..., *.recruitee.com).",
+      "editor": "stringList",
+      "prefill": [
+        "greenhouse:stripe",
+        "ashby:ramp",
+        "lever:spotify"
+      ],
+      "default": [
+        "greenhouse:stripe",
+        "ashby:ramp",
+        "lever:spotify"
+      ]
+    },
+    "maxJobsPerBoard": {
+      "title": "Max jobs per board",
+      "type": "integer",
+      "description": "0 = all",
+      "default": 0,
+      "minimum": 0
+    }
+  },
+  "required": [
+    "boards"
+  ]
+}

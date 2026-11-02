@@ -1,0 +1,10 @@
+{
+  "name": "remote-jobs-feed",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Remote jobs from RemoteOK and Arbeitnow public JSON APIs",
+  "main": "src/main.js",
+  "scripts": { "start": "node src/main.js", "test": "node src/selftest.js" },
+  "dependencies": { "apify": "^3.2.0" },
+  "license": "MIT"
+}

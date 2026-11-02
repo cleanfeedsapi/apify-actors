@@ -1,0 +1,48 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "app_id": { "type": "integer" },
+      "name": { "type": "string" },
+      "type": { "type": ["string", "null"] },
+      "is_free": { "type": "boolean" },
+      "price_cents": { "type": ["integer", "null"] },
+      "currency": { "type": ["string", "null"] },
+      "discount_percent": { "type": "number" },
+      "release_date": { "type": ["string", "null"] },
+      "developers": { "type": "array", "items": { "type": "string" } },
+      "publishers": { "type": "array", "items": { "type": "string" } },
+      "genres": { "type": "array", "items": { "type": "string" } },
+      "categories": { "type": "array", "items": { "type": "string" } },
+      "platforms": {
+        "type": "object",
+        "properties": {
+          "windows": { "type": "boolean" },
+          "mac": { "type": "boolean" },
+          "linux": { "type": "boolean" }
+        }
+      },
+      "metacritic": { "type": ["integer", "null"] },
+      "recommendations": { "type": ["integer", "null"] },
+      "header_image": { "type": ["string", "null"] },
+      "url": { "type": "string" }
+    },
+    "required": ["app_id", "name", "url"]
+  },
+  "views": {
+    "overview": {
+      "title": "Apps",
+      "transformation": {
+        "fields": ["app_id", "name", "type", "price_cents", "currency", "discount_percent", "release_date", "url"]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "url": { "label": "Store", "format": "link" }
+        }
+      }
+    }
+  }
+}

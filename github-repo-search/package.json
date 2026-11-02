@@ -1,0 +1,10 @@
+{
+  "name": "github-repo-search",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "New/trending GitHub repos by topic, language, or date window via official Search API",
+  "main": "src/main.js",
+  "scripts": { "start": "node src/main.js", "test": "node src/selftest.js" },
+  "dependencies": { "apify": "^3.2.0" },
+  "license": "MIT"
+}

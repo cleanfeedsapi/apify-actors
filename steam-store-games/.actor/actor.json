@@ -1,0 +1,14 @@
+{
+  "actorSpecification": 1,
+  "name": "steam-store-games",
+  "title": "Steam Store Games API: details, search, listings | $2/1K",
+  "description": "Steam storefront public JSON — appdetails, store search, topsellers/new/specials. Name, price, discount, genres, platforms, metacritic, recommendations. No login, no HTML scrape. $2 per 1,000 apps.",
+  "version": "0.1",
+  "input": "./input_schema.json",
+  "dockerfile": "../Dockerfile",
+  "readme": "../README.md",
+  "output": "./output_schema.json",
+  "storages": {
+    "dataset": "./dataset_schema.json"
+  }
+}

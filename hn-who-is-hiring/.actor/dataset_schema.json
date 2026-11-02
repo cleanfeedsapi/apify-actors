@@ -1,0 +1,88 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "source": {
+        "type": "string",
+        "description": "Always hn"
+      },
+      "thread_id": {
+        "type": "string",
+        "description": "HN item id of the monthly thread"
+      },
+      "comment_id": {
+        "type": "string",
+        "description": "HN item id of the top-level comment"
+      },
+      "company": {
+        "type": ["string", "null"]
+      },
+      "title": {
+        "type": ["string", "null"],
+        "description": "Role / headline from the first line"
+      },
+      "location": {
+        "type": ["string", "null"]
+      },
+      "remote": {
+        "type": "boolean"
+      },
+      "salary": {
+        "type": ["string", "null"]
+      },
+      "url": {
+        "type": "string",
+        "description": "https://news.ycombinator.com/item?id=…"
+      },
+      "links": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "http(s) hrefs extracted from the comment"
+      },
+      "posted_at": {
+        "type": ["string", "null"],
+        "description": "ISO 8601 from comment time"
+      },
+      "text": {
+        "type": "string",
+        "description": "HTML-decoded comment body"
+      }
+    },
+    "required": ["source", "thread_id", "comment_id", "url", "text", "remote", "links"]
+  },
+  "views": {
+    "overview": {
+      "title": "Jobs",
+      "transformation": {
+        "fields": [
+          "company",
+          "title",
+          "location",
+          "remote",
+          "salary",
+          "posted_at",
+          "url",
+          "source"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "url": {
+            "label": "Comment",
+            "format": "link"
+          },
+          "posted_at": {
+            "label": "Posted",
+            "format": "date"
+          },
+          "remote": {
+            "label": "Remote"
+          }
+        }
+      }
+    }
+  }
+}

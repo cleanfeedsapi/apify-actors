@@ -1,0 +1,19 @@
+{
+  "actorOutputSchemaVersion": 1,
+  "title": "HN Who Is Hiring output",
+  "description": "One row per top-level company comment on the selected HN Who is hiring? thread.",
+  "properties": {
+    "jobs": {
+      "type": "string",
+      "title": "Jobs",
+      "description": "Default dataset with all job rows (source, thread_id, comment_id, company, title, location, remote, salary, url, links, posted_at, text).",
+      "template": "{{links.apiDefaultDatasetUrl}}/items"
+    },
+    "summary": {
+      "type": "string",
+      "title": "Summary",
+      "description": "Key-value store record SUMMARY: {kind, thread_id, thread_title, jobs}.",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/SUMMARY"
+    }
+  }
+}

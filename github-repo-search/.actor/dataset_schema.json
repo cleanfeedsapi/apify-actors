@@ -1,0 +1,43 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "query": { "type": "string", "description": "Search query that produced this row" },
+      "full_name": { "type": ["string", "null"], "description": "owner/repo" },
+      "url": { "type": ["string", "null"], "description": "https://github.com/owner/repo" },
+      "description": { "type": ["string", "null"] },
+      "language": { "type": ["string", "null"] },
+      "stars": { "type": "integer" },
+      "forks": { "type": "integer" },
+      "open_issues": { "type": "integer" },
+      "topics": { "type": "array", "items": { "type": "string" } },
+      "license": { "type": ["string", "null"], "description": "SPDX id when present" },
+      "created_at": { "type": ["string", "null"] },
+      "updated_at": { "type": ["string", "null"] },
+      "pushed_at": { "type": ["string", "null"] },
+      "archived": { "type": "boolean" },
+      "owner": { "type": ["string", "null"] },
+      "owner_type": { "type": ["string", "null"], "description": "User | Organization" },
+      "error": { "type": "string", "description": "Present only on a failed-query row" }
+    },
+    "required": ["query"]
+  },
+  "views": {
+    "overview": {
+      "title": "Repos",
+      "transformation": {
+        "fields": ["full_name", "language", "stars", "forks", "license", "pushed_at", "url", "query"]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "url": { "label": "Repo", "format": "link" },
+          "pushed_at": { "label": "Pushed", "format": "date" },
+          "stars": { "label": "Stars" }
+        }
+      }
+    }
+  }
+}
