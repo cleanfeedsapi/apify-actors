@@ -1,8 +1,22 @@
 # GitHub Repo Search: Topic / Language / Date | $2/1K
 
-Find **new and trending public GitHub repositories** by topic, language, or date window — via the **official GitHub REST Search API**. No HTML scraping, no login wall, no proxies. Pass the same query syntax you use on github.com/search (`topic:mcp`, `language:Rust`, `created:>2026-10-01`).
+**Quick start**
+
+- GitHub repo search API as a dataset: one JSON row per public repository matching each query, with stars, forks, language, topics, license, timestamps and owner.
+- Minimal input: `{"queries": ["topic:mcp stars:>50"]}`
+- Run it from the Console, the API, or the Apify MCP server; export JSON, CSV or Excel.
+
+Find **new and trending public GitHub repositories** by topic, language, or date window via the **official GitHub REST Search API**. No HTML scraping, no login wall, no proxies. Pass the same query syntax you use on github.com/search (`topic:mcp`, `language:Rust`, `created:>2026-10-01`).
 
 You get one dataset row per repo: full name, URL, description, language, stars, forks, open issues, topics, license, created/updated/pushed timestamps, archived flag, owner.
+
+## Why this instead of scraping or the vendor API
+
+- It is the vendor API, with the plumbing done. The Actor calls `GET https://api.github.com/search/repositories` with `per_page=100` and pages through the results, so you get a flat dataset instead of writing pagination and rate-limit code.
+- The Search API caps every query at 1,000 results (10 pages of 100). The Actor stops there and says so. To cover more, split one broad query into several narrow ones (`stars:>500`, `stars:100..500`, monthly `created:` windows) and pass them all in `queries`.
+- Rate limits are respected, not fought. Unauthenticated search allows 10 requests per minute, 30 with a token. The Actor reads `X-RateLimit-Remaining` and `X-RateLimit-Reset` and sleeps until reset when the budget hits zero, then continues.
+- Optional token, never required. Pass a personal access token in the secret `token` field only when you run many pages or many queries.
+- The github.com trending page has no API and changes daily with no history. A scheduled run of `created:>` or `pushed:>` queries gives you a reproducible dataset per day.
 
 ## What you get
 
@@ -46,7 +60,7 @@ A query that fails (bad syntax, HTTP error) does **not** abort the run: it yield
 | `queries` | string list | `topic:mcp stars:>50` | GitHub search syntax |
 | `sort` | enum | `stars` | `stars` \| `updated` \| `forks` |
 | `maxReposPerQuery` | integer | `200` | hard-capped at **1000** (GitHub Search API limit); `0` = 1000 |
-| `token` | secret string | empty | optional PAT; raises Search rate limit 10 → 30 req/min |
+| `token` | secret string | empty | optional PAT; raises Search rate limit 10 to 30 req/min |
 
 ## Output example
 
@@ -81,10 +95,27 @@ GitHub Search API: **10 req/min** unauthenticated, **30 req/min** with a token. 
 
 ## Use cases
 
-- **Trend / launch radar**: `created:>YYYY-MM-DD language:…` or `topic:…` daily — catch new repos in a niche.
+- **Trend / launch radar**: `created:>YYYY-MM-DD language:...` or `topic:...` daily, catch new repos in a niche.
 - **Competitive / ecosystem maps**: dump top starred repos for a topic into a sheet.
 - **AI agents / MCP**: "list hot Rust repos this month" without browser automation.
 - **Monitoring**: schedule weekly, diff `full_name` sets for newcomers above a stars threshold.
+
+## Integrations
+
+- **Apify API**: `POST https://api.apify.com/v2/acts/cleanfeedsapi~github-repo-search/run-sync-get-dataset-items?token=<APIFY_TOKEN>` with the input JSON as the body. The response is the dataset, ready to parse.
+- **Scheduling**: open the Actor in the Apify Console, click Schedule, pick a cron (for example weekly on Monday) and the saved input runs on its own. Each run keeps its own dataset.
+- **n8n, Make, Zapier**: use the Apify integration in each tool, choose this Actor and pass the same input JSON. No per-Actor setup, no custom code.
+- **Apify MCP server for AI agents**: connect the Apify MCP server to Claude, Cursor or any MCP client and ask the agent to run `cleanfeedsapi/github-repo-search` with these inputs.
+
+## Related Actors by CleanFeeds
+
+- [hn-who-is-hiring](https://apify.com/cleanfeedsapi/hn-who-is-hiring): monthly Hacker News hiring thread as structured rows.
+- [steam-store-games](https://apify.com/cleanfeedsapi/steam-store-games): Steam storefront details, search and listings.
+- [app-store-reviews](https://apify.com/cleanfeedsapi/app-store-reviews): Apple App Store customer reviews via the public RSS JSON.
+- [shopify-products-feed](https://apify.com/cleanfeedsapi/shopify-products-feed): Shopify storefront `products.json` with a change filter.
+- [domain-mx-preflight](https://apify.com/cleanfeedsapi/domain-mx-preflight): MX, A and HTTPS preflight for domain lists.
+
+More feeds at [cleanfeeds.dev](https://cleanfeeds.dev).
 
 ## FAQ
 
@@ -97,5 +128,9 @@ GitHub Search API: **10 req/min** unauthenticated, **30 req/min** with a token. 
 **Why is `license` null?** GitHub did not detect a license file for that repo.
 
 **One query 422s, what happens?** You get one `error` row for it; other queries still run.
+
+**How do I detect new and closed items between runs?** `full_name` (`owner/repo`) is the stable key. Keep each run's dataset and compare `full_name` sets per `query`: names present today but not last week are newcomers; names that dropped out were renamed, deleted, archived out of the filter, or fell below your `stars:` threshold. Check `archived` on the newer run before calling a repo gone.
+
+**What happens when a source fails?** A query that GitHub rejects (422 for bad syntax, 5xx, or a rate-limit 403 without a reset header) does not stop the run. The Actor logs it, pushes one row with `query` and `error` (status, URL and the first 200 characters of GitHub's response), and moves to the next query. Error rows are not charged. A 403 with `X-RateLimit-Remaining: 0` is not an error: the Actor sleeps until reset and retries the same page.
 
 GitHub repo search API, trending GitHub repositories, topic search, language:Rust created:>date, GitHub stars scraper alternative, new GitHub repos by topic.

@@ -1,0 +1,62 @@
+{
+  "title": "Domain MX Preflight input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "domains": {
+      "title": "Domains or emails",
+      "type": "array",
+      "description": "Domains to check. If an entry looks like an email and emailsAllowed is true, only the domain part is used — the local part is discarded immediately and never written to the dataset (GDPR).",
+      "editor": "stringList",
+      "prefill": [
+        "google.com",
+        "github.com",
+        "mailinator.com",
+        "nonexistent-mx-preflight-test-aaa.invalid"
+      ],
+      "default": [
+        "google.com",
+        "github.com",
+        "microsoft.com",
+        "apple.com",
+        "amazon.com",
+        "cloudflare.com",
+        "wikipedia.org",
+        "mozilla.org",
+        "stripe.com",
+        "openai.com",
+        "apify.com",
+        "n8n.io",
+        "vercel.com",
+        "netlify.com",
+        "npmjs.com",
+        "python.org",
+        "debian.org",
+        "ubuntu.com",
+        "ietf.org",
+        "example.com",
+        "nonexistent-mx-preflight-test-aaa.invalid",
+        "dead-check-bbb.invalid",
+        "no-such-host-ccc.invalid"
+      ]
+    },
+    "emailsAllowed": {
+      "title": "Accept emails (strip local part)",
+      "type": "boolean",
+      "description": "If true, user@domain.com is reduced to domain.com before any network call. Local parts are never stored. If false, email-shaped inputs are rejected as errors.",
+      "default": true,
+      "editor": "checkbox"
+    },
+    "concurrency": {
+      "title": "Concurrency",
+      "type": "integer",
+      "description": "Parallel domain checks (DoH + HTTPS). Cap 50.",
+      "default": 10,
+      "minimum": 1,
+      "maximum": 50
+    }
+  },
+  "required": [
+    "domains"
+  ]
+}

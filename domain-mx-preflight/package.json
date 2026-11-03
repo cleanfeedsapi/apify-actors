@@ -1,0 +1,10 @@
+{
+  "name": "domain-mx-preflight",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Filter dead / no-MX / disposable domains via public DNS-over-HTTPS before paid enrichment",
+  "main": "src/main.js",
+  "scripts": { "start": "node src/main.js", "test": "node src/selftest.js" },
+  "dependencies": { "apify": "^3.2.0" },
+  "license": "MIT"
+}

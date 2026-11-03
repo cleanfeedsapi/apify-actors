@@ -1,0 +1,19 @@
+{
+  "actorOutputSchemaVersion": 1,
+  "title": "ATS Jobs Feed output",
+  "description": "One row per job opening, normalized across Greenhouse, Lever, Ashby, Workday, SmartRecruiters and Recruitee. A board that failed yields one row with an error field.",
+  "properties": {
+    "jobs": {
+      "type": "string",
+      "title": "Jobs",
+      "description": "Default dataset with all job rows (source, company, title, location, department, url, posted_at, updated_at, id).",
+      "template": "{{links.apiDefaultDatasetUrl}}/items"
+    },
+    "summary": {
+      "type": "string",
+      "title": "Summary",
+      "description": "Key-value store record SUMMARY: {boards, jobs} counts for the run.",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/SUMMARY"
+    }
+  }
+}

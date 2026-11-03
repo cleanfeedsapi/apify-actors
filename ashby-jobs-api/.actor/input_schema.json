@@ -1,0 +1,33 @@
+{
+  "title": "ATS Jobs Feed input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "boards": {
+      "title": "Boards",
+      "type": "array",
+      "description": "Ashby boards as ashby:<slug> or pasted URLs (jobs.ashbyhq.com/<company>). You can mix in other ATS boards too: greenhouse:, lever:, ashby:, workday:, smartrecruiters:, recruitee:.",
+      "editor": "stringList",
+      "prefill": [
+        "ashby:ramp",
+        "https://jobs.ashbyhq.com/notion",
+        "ashby:linear"
+      ],
+      "default": [
+        "ashby:ramp",
+        "https://jobs.ashbyhq.com/notion",
+        "ashby:linear"
+      ]
+    },
+    "maxJobsPerBoard": {
+      "title": "Max jobs per board",
+      "type": "integer",
+      "description": "0 = all",
+      "default": 0,
+      "minimum": 0
+    }
+  },
+  "required": [
+    "boards"
+  ]
+}

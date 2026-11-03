@@ -1,0 +1,36 @@
+{
+  "title": "Shopify Products Feed input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "shops": {
+      "title": "Shops",
+      "type": "array",
+      "description": "Shopify storefront origins: full URLs (https://www.allbirds.com) or bare domains (gymshark.com). Path suffixes are ignored.",
+      "editor": "stringList",
+      "default": ["https://www.allbirds.com", "https://gymshark.com"],
+      "prefill": ["https://www.allbirds.com", "https://gymshark.com"]
+    },
+    "collections": {
+      "title": "Collection handles",
+      "type": "array",
+      "description": "If non-empty, fetch only these collection product lists (/{handle}/products.json) instead of the whole catalog. Applied to every shop.",
+      "editor": "stringList",
+      "default": []
+    },
+    "maxProductsPerShop": {
+      "title": "Max products per shop",
+      "type": "integer",
+      "description": "Cap per shop (pagination uses 250/page). Default 40 keeps empty-input runs under a few minutes.",
+      "default": 40,
+      "minimum": 0
+    },
+    "onlyChangedSince": {
+      "title": "Only changed since (ISO)",
+      "type": "string",
+      "description": "If set (e.g. 2026-10-01T00:00:00.000Z), keep only products whose updated_at is strictly after this timestamp. Empty = all.",
+      "editor": "textfield",
+      "default": ""
+    }
+  }
+}

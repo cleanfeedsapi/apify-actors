@@ -1,0 +1,53 @@
+{
+  "title": "App Store Reviews input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "appIds": {
+      "title": "App IDs",
+      "type": "array",
+      "description": "Numeric App Store track IDs (e.g. 284882215 for Facebook). Digits from the App Store URL after /id.",
+      "editor": "stringList",
+      "prefill": ["284882215"],
+      "default": ["284882215"]
+    },
+    "appUrls": {
+      "title": "App Store URLs",
+      "type": "array",
+      "description": "Paste full App Store links like https://apps.apple.com/us/app/facebook/id284882215 — country + id are parsed automatically.",
+      "editor": "stringList",
+      "default": []
+    },
+    "search": {
+      "title": "Search term",
+      "type": "string",
+      "description": "Optional iTunes software search (entity=software). Hits are added to the app list. Empty = skip search.",
+      "editor": "textfield",
+      "default": ""
+    },
+    "countries": {
+      "title": "Storefront countries",
+      "type": "array",
+      "description": "ISO 3166-1 alpha-2 storefront codes (us, gb, de, …). Reviews are fetched per app × country. Cap 500 reviews each.",
+      "editor": "stringList",
+      "prefill": ["us"],
+      "default": ["us"]
+    },
+    "maxPages": {
+      "title": "Max RSS pages per app/country",
+      "type": "integer",
+      "description": "1–10. Each page has up to 50 reviews. Apple hard-caps at page 10 (~500 reviews per app per country).",
+      "default": 10,
+      "minimum": 1,
+      "maximum": 10
+    },
+    "includeAppDetails": {
+      "title": "Include app lookup details",
+      "type": "boolean",
+      "description": "If true, call itunes lookup for each app/country and store results in key-value record APPS (not the reviews dataset).",
+      "default": true,
+      "editor": "checkbox"
+    }
+  },
+  "required": []
+}

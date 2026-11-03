@@ -1,0 +1,10 @@
+{
+  "name": "shopify-products-feed",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Public Shopify storefront products.json feed with optional price/stock delta",
+  "main": "src/main.js",
+  "scripts": { "start": "node src/main.js", "test": "node src/selftest.js" },
+  "dependencies": { "apify": "^3.2.0" },
+  "license": "MIT"
+}

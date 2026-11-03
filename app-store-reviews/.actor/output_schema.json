@@ -1,0 +1,25 @@
+{
+  "actorOutputSchemaVersion": 1,
+  "title": "App Store Reviews output",
+  "description": "Default dataset = one row per review (or error). App lookup payloads are in key-value record APPS.",
+  "properties": {
+    "reviews": {
+      "type": "string",
+      "title": "Reviews",
+      "description": "Default dataset with review rows.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items"
+    },
+    "apps": {
+      "type": "string",
+      "title": "App details (APPS)",
+      "description": "Key-value store record APPS: array of itunes lookup objects.",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/APPS"
+    },
+    "summary": {
+      "type": "string",
+      "title": "Summary",
+      "description": "Key-value store record SUMMARY with counts.",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/SUMMARY"
+    }
+  }
+}

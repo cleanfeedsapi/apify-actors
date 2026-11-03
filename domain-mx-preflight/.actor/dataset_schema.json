@@ -1,0 +1,88 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": ["string", "null"],
+        "description": "Normalized domain (never an email local-part)"
+      },
+      "domain": {
+        "type": ["string", "null"],
+        "description": "Domain that was checked"
+      },
+      "has_mx": {
+        "type": "boolean",
+        "description": "True if DoH returned at least one MX record"
+      },
+      "mx_hosts": {
+        "type": "array",
+        "description": "MX exchange hostnames",
+        "items": { "type": "string" }
+      },
+      "has_a": {
+        "type": "boolean",
+        "description": "True if DoH returned at least one A record"
+      },
+      "http_status": {
+        "type": ["integer", "null"],
+        "description": "Final HTTPS status for https://{domain}, or null on timeout/error"
+      },
+      "final_url": {
+        "type": ["string", "null"],
+        "description": "URL after redirects"
+      },
+      "redirect_to_other_domain": {
+        "type": "boolean",
+        "description": "True if final host eTLD+1 differs from input domain"
+      },
+      "is_disposable": {
+        "type": "boolean",
+        "description": "True if domain is on the bundled disposable-mailbox list"
+      },
+      "verdict": {
+        "type": "string",
+        "description": "ok | no_mx | dead | disposable | redirects"
+      },
+      "checked_at": {
+        "type": "string",
+        "description": "ISO 8601 timestamp"
+      },
+      "error": {
+        "type": "string",
+        "description": "Present only on a failed-item row"
+      }
+    },
+    "required": []
+  },
+  "views": {
+    "overview": {
+      "title": "Domains",
+      "transformation": {
+        "fields": [
+          "domain",
+          "verdict",
+          "has_mx",
+          "has_a",
+          "http_status",
+          "is_disposable",
+          "redirect_to_other_domain",
+          "checked_at"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "checked_at": {
+            "label": "Checked",
+            "format": "date"
+          },
+          "verdict": {
+            "label": "Verdict"
+          }
+        }
+      }
+    }
+  }
+}

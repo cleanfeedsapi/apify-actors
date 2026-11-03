@@ -1,0 +1,94 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "source": {
+        "type": "string",
+        "description": "ATS: greenhouse | lever | ashby | workday | smartrecruiters | recruitee"
+      },
+      "company": {
+        "type": "string",
+        "description": "Board slug from the careers URL"
+      },
+      "title": {
+        "type": "string"
+      },
+      "location": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "department": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "url": {
+        "type": "string",
+        "description": "Public job page / apply URL"
+      },
+      "posted_at": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "ISO 8601"
+      },
+      "updated_at": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "ISO 8601 (Greenhouse and Recruitee)"
+      },
+      "id": {
+        "type": "string",
+        "description": "ATS-side job id, stable across runs"
+      },
+      "error": {
+        "type": "string",
+        "description": "Present only on a failed-board row"
+      }
+    },
+    "required": [
+      "source",
+      "company"
+    ]
+  },
+  "views": {
+    "overview": {
+      "title": "Jobs",
+      "transformation": {
+        "fields": [
+          "company",
+          "title",
+          "location",
+          "department",
+          "posted_at",
+          "url",
+          "source"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "url": {
+            "label": "Apply",
+            "format": "link"
+          },
+          "posted_at": {
+            "label": "Posted",
+            "format": "date"
+          },
+          "source": {
+            "label": "ATS"
+          }
+        }
+      }
+    }
+  }
+}

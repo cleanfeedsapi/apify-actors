@@ -1,0 +1,19 @@
+{
+  "actorOutputSchemaVersion": 1,
+  "title": "Shopify Products Feed output",
+  "description": "One row per product (or one error row per failed shop).",
+  "properties": {
+    "products": {
+      "type": "string",
+      "title": "Products",
+      "description": "Default dataset with product rows (shop, product_id, handle, title, vendor, product_type, tags, url, dates, prices, available, image, sku).",
+      "template": "{{links.apiDefaultDatasetUrl}}/items"
+    },
+    "summary": {
+      "type": "string",
+      "title": "Summary",
+      "description": "Key-value store record SUMMARY: {shops, products, errors}.",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/SUMMARY"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "actorSpecification": 1,
+  "name": "app-store-reviews",
+  "title": "App Store Reviews + Lookup (iTunes JSON) | $1.50/1K",
+  "description": "Public iTunes JSON: App Store customer reviews (RSS, max 500/app/country), lookup, and software search. Pass app id, App Store URL, or search term. No login, no HTML scrape, no proxies. $1.50 per 1,000 reviews.",
+  "version": "0.1",
+  "input": "./input_schema.json",
+  "dockerfile": "../Dockerfile",
+  "readme": "../README.md",
+  "output": "./output_schema.json",
+  "storages": {
+    "dataset": "./dataset_schema.json"
+  }
+}

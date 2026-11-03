@@ -1,0 +1,19 @@
+{
+  "actorOutputSchemaVersion": 1,
+  "title": "Domain MX Preflight output",
+  "description": "One row per input domain. Failed items yield one row with an error field; the run continues.",
+  "properties": {
+    "domains": {
+      "type": "string",
+      "title": "Domain checks",
+      "description": "Default dataset with domain preflight rows (domain, has_mx, mx_hosts, has_a, http_status, final_url, redirect_to_other_domain, is_disposable, verdict, checked_at).",
+      "template": "{{links.apiDefaultDatasetUrl}}/items"
+    },
+    "summary": {
+      "type": "string",
+      "title": "Summary",
+      "description": "Key-value store record SUMMARY: {input, ok, errors, verdicts}.",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/SUMMARY"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "actorSpecification": 1,
+  "name": "shopify-products-feed",
+  "title": "Shopify Products.json Feed + Delta | $1/1K",
+  "description": "Public Shopify storefront products.json (and collection products.json) as a clean product feed. Price range, availability, tags, images. Optional updated_at delta. No login, no HTML scrape, no proxies. $1 per 1,000 products.",
+  "version": "0.1",
+  "input": "./input_schema.json",
+  "dockerfile": "../Dockerfile",
+  "readme": "../README.md",
+  "output": "./output_schema.json",
+  "storages": {
+    "dataset": "./dataset_schema.json"
+  }
+}

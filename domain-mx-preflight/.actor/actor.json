@@ -1,0 +1,14 @@
+{
+  "actorSpecification": 1,
+  "name": "domain-mx-preflight",
+  "title": "Domain MX Preflight: dead, no-MX, disposable | $0.50/1K",
+  "description": "Check domains (or emails\u2192domain only) via public DNS-over-HTTPS MX+A and an HTTPS apex probe before you spend Apollo/Clay/NeverBounce credits. Flags no MX, dead DNS, disposable mailboxes, and cross-domain redirects. No login, no HTML scrape, no proxies. $0.50 per 1,000 domains.",
+  "version": "0.1",
+  "input": "./input_schema.json",
+  "dockerfile": "../Dockerfile",
+  "readme": "../README.md",
+  "output": "./output_schema.json",
+  "storages": {
+    "dataset": "./dataset_schema.json"
+  }
+}

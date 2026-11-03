@@ -1,0 +1,119 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "app_id": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "app_name": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "country": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "review_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "title": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "rating": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "version": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "updated_at": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "ISO 8601"
+      },
+      "content": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "vote_sum": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "vote_count": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "url": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "error": {
+        "type": "string",
+        "description": "Present only on a failed fetch row"
+      }
+    },
+    "required": []
+  },
+  "views": {
+    "overview": {
+      "title": "Reviews",
+      "transformation": {
+        "fields": [
+          "app_name",
+          "country",
+          "rating",
+          "title",
+          "updated_at",
+          "version",
+          "url"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "url": {
+            "label": "Link",
+            "format": "link"
+          },
+          "updated_at": {
+            "label": "Updated",
+            "format": "date"
+          },
+          "rating": {
+            "label": "\u2605"
+          }
+        }
+      }
+    }
+  }
+}
