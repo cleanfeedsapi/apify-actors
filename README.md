@@ -18,7 +18,7 @@ Clean JSON feeds from **official or clearly public JSON endpoints**, packaged as
 | [domain-mx-preflight](domain-mx-preflight/) | MX, SPF, DMARC and mail-provider checks for domain lists (DNS over HTTPS) | [apify.com/cleanfeedsapi/domain-mx-preflight](https://apify.com/cleanfeedsapi/domain-mx-preflight) |
 | [pypi-package-intel](pypi-package-intel/) | PyPI and npm package metadata with weekly downloads | [apify.com/cleanfeedsapi/pypi-package-intel](https://apify.com/cleanfeedsapi/pypi-package-intel) |
 
-Pricing is $2 per 1,000 rows ($1.50 on the single-ATS job Actors). Source rules we follow: if a host's `robots.txt` disallows the JSON path we do not use it, and we never sell personal data of individuals.
+Pricing per 1,000 rows: $2 on the job, GitHub and Steam feeds, $1.50 on the single-ATS job Actors and App Store reviews, $1 on the Shopify products feed, $0.50 on MX preflight. Apify Silver and Gold plans get 25% and 50% off. Source rules we follow: if a host's `robots.txt` disallows the JSON path we do not use it, and we never sell personal data of individuals.
 
 ## Run locally
 
