@@ -38,7 +38,8 @@
       "title": "Redact e-mail addresses",
       "type": "boolean",
       "description": "Replace e-mail addresses in all text fields with [email]. Company posts often contain the hiring person's address; turn this on if you do not need it.",
-      "default": false
+      "default": true,
+      "prefill": true
     }
   }
 }

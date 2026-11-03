@@ -7,7 +7,7 @@ if (!boards.length) throw new Error("input.boards is empty");
 let total = 0;
 for (const spec of boards) {
   try {
-    let rows = await fetchBoard(spec);
+    let rows = await fetchBoard(spec, maxJobsPerBoard);
     if (maxJobsPerBoard > 0) rows = rows.slice(0, maxJobsPerBoard);
     // PPE: one "job" event per returned row. Outside pay-per-event (free/dev runs) nothing is charged or trimmed.
     let limit = false;

@@ -14,17 +14,18 @@ const post = async (url, body) => {
 
 
 // Workday public CXS jobs API (same JSON the career site itself loads). Slug: "tenant.wdN/site".
-async function workday(slug, maxJobs = 2000) {
+async function workday(slug, maxJobs = Infinity) {
   const m = String(slug).trim().match(/^([^/]+)\.([^/]+)\/(.+)$/);
   if (!m) throw new Error(`bad workday slug "${slug}" (use tenant.wdN/site, e.g. adobe.wd5/external_experienced)`);
   const [, tenant, wdN, site] = m;
   const host = `${tenant}.${wdN}.myworkdayjobs.com`;
   const endpoint = `https://${host}/wday/cxs/${tenant}/${site}/jobs`;
   const rows = [];
-  let offset = 0, total = Infinity;
-  while (rows.length < maxJobs && offset < total) {
+  let offset = 0;
+  // `total` is only a hint (large tenants report 2000 while serving more): page until an empty page.
+  // ponytail: hard stop at 20k postings per site guards against an endpoint that never empties.
+  while (rows.length < maxJobs && offset < 20000) {
     const d = await post(endpoint, { appliedFacets: {}, limit: 20, offset, searchText: "" });
-    if (offset === 0) total = Number(d.total ?? 0); // later pages report total=0
     const page = d.jobPostings ?? [];
     if (!page.length) break;
     for (const j of page) {
@@ -113,13 +114,13 @@ export function normalizeSpec(spec) {
 }
 
 // "greenhouse:stripe" (or a careers URL) -> rows tagged with source/company
-export async function fetchBoard(spec) {
+export async function fetchBoard(spec, maxJobs = 0) {
   spec = normalizeSpec(spec);
   const k = spec.indexOf(":");
   const source = spec.slice(0, k), slug = spec.slice(k + 1);
   const fn = SOURCES[source];
   if (!fn || !slug) throw new Error(`bad board spec "${spec}" (use source:slug, source in ${Object.keys(SOURCES)})`);
-  const rows = await fn(slug.trim());
+  const rows = await fn(slug.trim(), maxJobs > 0 ? maxJobs : Infinity);
   // Drop malformed postings (no title or URL) so dataset schema validation never rejects a push after charging.
   return rows.filter((r) => r.title && r.url).map((r) => ({ source, company: slug.trim(), ...r }));
 }

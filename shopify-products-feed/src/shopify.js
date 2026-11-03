@@ -1,5 +1,5 @@
 // Public Shopify storefront products.json (same JSON the theme loads). No HTML, no proxies, no login.
-const UA = "shopify-products-feed/0.1 (+https://example.com/actor-contact; Apify Actor)";
+const UA = "shopify-products-feed/0.1 (+https://cleanfeeds.dev; contact@cleanfeeds.dev; Apify Actor)";
 const PAGE_LIMIT = 250;
 const PAGE_GAP_MS = 500;
 const SHOP_CONCURRENCY = 2;

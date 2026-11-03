@@ -124,7 +124,7 @@ More feeds at [cleanfeeds.dev](https://cleanfeeds.dev).
 
 **Is this HTML scraping?** No. RSS/lookup/search JSON only.
 
-**Are there limits or terms on Apple's side?** Apple's Search/Lookup API is rate limited to roughly 20 calls per minute per IP and Apple's terms allow its content for promoting App Store content; the reviews feed may change without notice.
+**Are there limits or terms on Apple's side?** Apple's Search/Lookup API is rate limited to roughly 20 calls per minute per IP. The reviews feed is undocumented and may change without notice; make sure your use of the reviews complies with Apple's terms, which the Actor does not check for you.
 
 **Can I paste an App Store URL?** Yes. Country and id are parsed from the URL: `https://apps.apple.com/gb/app/whatsapp-messenger/id310633997` gives `gb` and `310633997`.
 

@@ -49,7 +49,7 @@ Deleted / dead comments are skipped. Only **top-level** kids of the thread are r
 | `thread` | string | `latest` | `latest` resolves via the `whoishiring` user, or pass a numeric item id |
 | `maxComments` | integer | `0` | `0` = all top-level comments |
 | `query` | string | `""` | case-insensitive substring filter on `text` |
-| `redactEmails` | boolean | `false` | replace e-mail addresses in `text` with `[email]` |
+| `redactEmails` | boolean | `true` | replace e-mail addresses in `text` with `[email]` |
 
 Empty input works: latest Who is hiring? thread, all comments, no filter.
 
@@ -59,16 +59,16 @@ Empty input works: latest Who is hiring? thread, all comments, no filter.
 {
   "source": "hn",
   "thread_id": "49922569",
-  "comment_id": "49926618",
-  "company": "FUTO",
-  "title": "https://futo.tech/",
-  "location": "Austin, TX | REMOTE(Worldwide) or ONSITE | Full Time",
+  "comment_id": "49929056",
+  "company": "GiveDirectly",
+  "title": "Senior Software Engineer",
+  "location": "REMOTE in select countries (listed here https://perfectwiki.page/p/iOeyfUha_9)",
   "remote": true,
-  "salary": null,
-  "url": "https://news.ycombinator.com/item?id=49926618",
-  "links": ["https://futo.tech/"],
-  "posted_at": "2026-10-01T15:12:03.000Z",
-  "text": "FUTO | https://futo.tech/ | Austin, TX | REMOTE(Worldwide) or ONSITE | Full Time\nFUTO is an organization..."
+  "salary": "$181K base + 15% bonus index",
+  "url": "https://news.ycombinator.com/item?id=49929056",
+  "links": ["https://perfectwiki.page/p/iOeyfUha_9", "https://job-boards.greenhouse.io/givedirectly/jobs/4558349005"],
+  "posted_at": "2026-10-02T01:46:45.000Z",
+  "text": "GiveDirectly | Senior Software Engineer | REMOTE in select countries (listed here https://perfectwiki.page/p/iOeyfUha_9) | $181K base + 15% bonus index\nAt GiveDirectly..."
 }
 ```
 
@@ -112,7 +112,7 @@ Free sample dataset: [cleanfeeds/tech-jobs-daily on Hugging Face](https://huggin
 
 **Why is `company` or `title` null / weird?** Many comments ignore the `Company | Role | Location` convention. Fields are never guessed beyond that boring split; full `text` is always there.
 
-**Does the output contain personal data?** Company posts often include the e-mail address of the person hiring. The Actor returns the post text and links as published. If you store or redistribute rows you are the data controller for those addresses; set `redactEmails: true` to replace e-mail addresses in `text` with `[email]`.
+**Does the output contain personal data?** Company posts often include the e-mail address of the person hiring. By default the Actor replaces e-mail addresses in every text field with `[email]` (`redactEmails: true`). Set `redactEmails: false` only if you have a lawful basis to process those addresses; you are then the data controller for them.
 
 **Rate limits?** Item fetches run with concurrency up to 10 against Firebase.
 

@@ -7,7 +7,7 @@ const {
   thread = "latest",
   maxComments = 0,
   query = "",
-  redactEmails = false,
+  redactEmails = true,
 } = (await Actor.getInput()) ?? {};
 
 let { thread: root, rows } = await fetchThreadJobs({ kind, thread, maxComments, query });

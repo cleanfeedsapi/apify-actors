@@ -14,7 +14,7 @@ for (const spec of boards) {
       await Actor.pushData([{ source: norm.split(":")[0], company: norm.split(":").slice(1).join(":"), error: `This Actor accepts only ${ATS} boards; use cleanfeedsapi/ats-jobs-feed for mixed ATS lists` }]);
       continue;
     }
-    let rows = await fetchBoard(norm);
+    let rows = await fetchBoard(norm, maxJobsPerBoard);
     if (maxJobsPerBoard > 0) rows = rows.slice(0, maxJobsPerBoard);
     // PPE: one "job" event per returned row. Outside pay-per-event (free/dev runs) nothing is charged or trimmed.
     let limit = false;

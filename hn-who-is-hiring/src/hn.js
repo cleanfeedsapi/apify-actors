@@ -36,7 +36,8 @@ const extractLinks = (html) => {
   let m;
   while ((m = re.exec(html ?? ""))) {
     const u = m[1];
-    if (u.startsWith("http") && !out.includes(u)) out.push(u);
+    const u2 = decodeHtml(u);
+    if (u2.startsWith("http") && !out.includes(u2)) out.push(u2);
   }
   return out;
 };
@@ -52,7 +53,7 @@ const salaryHint = (s) => {
 /** Boring first-line split on " | " → company, role, location, salary. */
 export function parseComment(rawHtml, { threadId, commentId, postedAt }) {
   const links = extractLinks(rawHtml);
-  const text = decodeHtml(rawHtml).replace(/\r/g, "").trim();
+  const text = decodeHtml(stripTags(String(rawHtml ?? "").replace(/<p>/gi, "\n").replace(/<br\s*\/?>/gi, "\n"))).replace(/\r/g, "").trim();
   const firstLine = stripTags(text.split("\n").find((l) => l.trim()) ?? "").trim();
   const parts = firstLine.split(/\s*\|\s*/).map((p) => p.trim()).filter(Boolean);
 
