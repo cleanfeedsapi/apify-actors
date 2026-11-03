@@ -29,7 +29,7 @@ Raw board data, nine normalized fields, no enrichment; cheaper than multi-ATS an
 | Field | Type | Default | Notes |
 |---|---|---|---|
 | `boards` | string list | two sample Workday boards | `workday:<tenant>.<wdN>/<site>` or a Workday careers URL |
-| `maxJobsPerBoard` | integer | `500` | `0` = everything the board returns (pages until the endpoint comes back empty, not until its often-wrong `total`) |
+| `maxJobsPerBoard` | integer | `500` | `0` = everything the endpoint returns (Workday serves at most 2,000 postings per site query; the reader stops when a page repeats) |
 
 ## Output example
 
@@ -88,7 +88,7 @@ Free sample dataset: [cleanfeeds/tech-jobs-daily on Hugging Face](https://huggin
 
 **Can I mix ATS platforms in one run?** No. This Actor accepts only Workday boards (`workday:<slug>` or a pasted Workday URL). Entries for other platforms are returned as one error row each and skipped. For a mixed list across six ATS platforms use [ats-jobs-feed](https://apify.com/cleanfeedsapi/ats-jobs-feed) ($2 per 1,000).
 
-**Why is `maxJobsPerBoard` 500 by default here?** Large Workday tenants publish thousands of postings and the endpoint returns 20 per request. The default keeps an empty-input run short. Set `0` to read everything; NVIDIA, for example, serves more than 3,000 postings even though the endpoint reports `total: 2000`.
+**Why is `maxJobsPerBoard` 500 by default here?** Large Workday tenants publish thousands of postings and the endpoint returns 20 per request. The default keeps an empty-input run short. Set `0` to read everything the endpoint serves, which is at most 2,000 postings per site: past that offset Workday returns the last page again, so the reader stops when a page repeats. Tenants with more open roles need several runs with different career-site URLs (regional sites) or a search facet, which this Actor does not do.
 
 **How do I detect new and closed items between runs?** `id` is the Workday requisition id (for example `R123456`) and does not change between runs. Keep each run's dataset and compare `id` sets per `company`: ids present today but not yesterday are new roles, ids present yesterday but not today are closed. Schedule the Actor daily and the diff is a few lines in n8n, Make or a script.
 

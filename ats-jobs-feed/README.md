@@ -27,7 +27,7 @@ You pass boards (`greenhouse:stripe`, `lever:spotify`, `ashby:ramp`, `workday:ad
 - No keys. All six endpoints are unauthenticated. You never need Harvest, Lever Data API, Workday tenant credentials or a SmartRecruiters token.
 - One schema instead of six. Each ATS names and nests fields differently; the Actor maps all of them to the same nine columns so a target-account list with mixed ATSs produces one flat table.
 - Pasted URLs are recognized for all six, including `job-boards.greenhouse.io` and localized Workday paths like `/en-US/<site>`.
-- Pagination is handled where the ATS needs it: Workday in pages of 20 until the endpoint comes back empty (its `total` field is unreliable), SmartRecruiters in pages of 100. Postings without a title or URL are dropped before charging.
+- Pagination is handled where the ATS needs it: Workday in pages of 20 until a page repeats (its `total` field is unreliable and offsets past the end return the last page again; Workday serves at most 2,000 postings per site query), SmartRecruiters in pages of 100. Postings without a title or URL are dropped before charging.
 
 ## Input examples
 

@@ -22,11 +22,12 @@ async function workday(slug, maxJobs = Infinity) {
   const endpoint = `https://${host}/wday/cxs/${tenant}/${site}/jobs`;
   const rows = [];
   let offset = 0;
-  // `total` is only a hint (large tenants report 2000 while serving more): page until an empty page.
-  // ponytail: hard stop at 20k postings per site guards against an endpoint that never empties.
+  const seen = new Set();
+  // `total` is unreliable and offsets past the end return the LAST PAGE AGAIN (NVIDIA: every offset >= 2000),
+  // so stop when a page brings no new posting. Workday serves at most 2,000 postings per query.
   while (rows.length < maxJobs && offset < 20000) {
     const d = await post(endpoint, { appliedFacets: {}, limit: 20, offset, searchText: "" });
-    const page = d.jobPostings ?? [];
+    const page = (d.jobPostings ?? []).filter((j) => { const k = j.externalPath ?? j.title; if (seen.has(k)) return false; seen.add(k); return true; });
     if (!page.length) break;
     for (const j of page) {
       if (rows.length >= maxJobs) break;
