@@ -132,5 +132,3 @@ More feeds at [cleanfeeds.dev](https://cleanfeeds.dev).
 **How do I detect new and closed items between runs?** `full_name` (`owner/repo`) is the stable key. Keep each run's dataset and compare `full_name` sets per `query`: names present today but not last week are newcomers; names that dropped out were renamed, deleted, archived out of the filter, or fell below your `stars:` threshold. Check `archived` on the newer run before calling a repo gone.
 
 **What happens when a source fails?** A query that GitHub rejects (422 for bad syntax, 5xx, or a rate-limit 403 without a reset header) does not stop the run. The Actor logs it, pushes one row with `query` and `error` (status, URL and the first 200 characters of GitHub's response), and moves to the next query. Error rows are not charged. A 403 with `X-RateLimit-Remaining: 0` is not an error: the Actor sleeps until reset and retries the same page.
-
-GitHub repo search API, trending GitHub repositories, topic search, language:Rust created:>date, GitHub stars scraper alternative, new GitHub repos by topic.

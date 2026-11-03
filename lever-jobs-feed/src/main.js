@@ -1,0 +1,36 @@
+import { Actor } from "apify";
+import { fetchBoard, normalizeSpec } from "./ats.js";
+
+await Actor.init();
+const { boards = ["lever:spotify", "https://jobs.lever.co/palantir", "lever:veeva"], maxJobsPerBoard = 0 } = (await Actor.getInput()) ?? {};
+if (!boards.length) throw new Error("input.boards is empty");
+let total = 0;
+const ATS = "lever";
+for (const spec of boards) {
+  try {
+    const norm = normalizeSpec(spec);
+    if (!norm.startsWith(ATS + ":")) {
+      console.warn(`${spec}: not a ${ATS} board, skipped`);
+      await Actor.pushData([{ source: norm.split(":")[0], company: norm.split(":").slice(1).join(":"), error: `This Actor accepts only ${ATS} boards; use cleanfeedsapi/ats-jobs-feed for mixed ATS lists` }]);
+      continue;
+    }
+    let rows = await fetchBoard(norm);
+    if (maxJobsPerBoard > 0) rows = rows.slice(0, maxJobsPerBoard);
+    // PPE: one "job" event per returned row. Outside pay-per-event (free/dev runs) nothing is charged or trimmed.
+    let limit = false;
+    if (Actor.getChargingManager().getPricingInfo().isPayPerEvent) {
+      const { chargedCount, eventChargeLimitReached } = await Actor.charge({ eventName: "job", count: rows.length });
+      rows = rows.slice(0, chargedCount);
+      limit = eventChargeLimitReached;
+    }
+    await Actor.pushData(rows);
+    total += rows.length;
+    console.log(`${spec}: ${rows.length} jobs`);
+    if (limit) { console.warn("max charge reached, stopping"); break; }
+  } catch (e) {
+    console.warn(`${spec}: FAILED ${e.message}`);
+    await Actor.pushData([{ source: String(spec).split(":")[0].replace(/^https?$/, "url"), company: String(spec).split(":").slice(1).join(":"), error: e.message }]);
+  }
+}
+await Actor.setValue("SUMMARY", { boards: boards.length, jobs: total });
+await Actor.exit();

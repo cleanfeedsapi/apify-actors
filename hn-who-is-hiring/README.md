@@ -26,7 +26,7 @@ Pull the monthly **Ask HN: Who is hiring?** thread into one clean JSON dataset. 
 | `company`, `title`, `location` | parsed from the conventional first line (`Company \| Role \| Location \| ...`) when present; otherwise best-effort / `null` |
 | `remote` | `true` if the header, location or first 280 characters of text mention "remote" |
 | `salary` | salary-looking substring or `null` (never invented) |
-| `url` | `https://news.ycombinator.com/item?id=...` |
+| `url` | `https://news.ycombinator.com/item?id=49926618` |
 | `links` | `http(s)` hrefs found in the comment |
 | `posted_at` | ISO 8601 from HN `time` |
 | `text` | HTML-decoded comment body |
@@ -49,6 +49,7 @@ Deleted / dead comments are skipped. Only **top-level** kids of the thread are r
 | `thread` | string | `latest` | `latest` resolves via the `whoishiring` user, or pass a numeric item id |
 | `maxComments` | integer | `0` | `0` = all top-level comments |
 | `query` | string | `""` | case-insensitive substring filter on `text` |
+| `redactEmails` | boolean | `false` | replace e-mail addresses in `text` with `[email]` |
 
 Empty input works: latest Who is hiring? thread, all comments, no filter.
 
@@ -98,7 +99,7 @@ Schedule the Actor on the 1st (and mid-month) after the thread is posted. Keep d
 
 - [ats-jobs-feed](https://apify.com/cleanfeedsapi/ats-jobs-feed): Greenhouse, Lever, Ashby, Workday, SmartRecruiters and Recruitee boards in one schema.
 - [remote-jobs-feed](https://apify.com/cleanfeedsapi/remote-jobs-feed): RemoteOK and Arbeitnow remote listings.
-- [greenhouse-jobs-api](https://apify.com/cleanfeedsapi/greenhouse-jobs-api): Greenhouse boards via the official Job Board API.
+- [greenhouse-jobs-feed](https://apify.com/cleanfeedsapi/greenhouse-jobs-feed): Greenhouse boards via the official Job Board API.
 - [github-repo-search](https://apify.com/cleanfeedsapi/github-repo-search): new and trending repositories by topic, language or date.
 
 Free sample dataset: [cleanfeeds/tech-jobs-daily on Hugging Face](https://huggingface.co/datasets/cleanfeeds/tech-jobs-daily). More feeds at [cleanfeeds.dev](https://cleanfeeds.dev).
@@ -111,10 +112,10 @@ Free sample dataset: [cleanfeeds/tech-jobs-daily on Hugging Face](https://huggin
 
 **Why is `company` or `title` null / weird?** Many comments ignore the `Company | Role | Location` convention. Fields are never guessed beyond that boring split; full `text` is always there.
 
+**Does the output contain personal data?** Company posts often include the e-mail address of the person hiring. The Actor returns the post text and links as published. If you store or redistribute rows you are the data controller for those addresses; set `redactEmails: true` to replace e-mail addresses in `text` with `[email]`.
+
 **Rate limits?** Item fetches run with concurrency up to 10 against Firebase.
 
 **How do I detect new and closed items between runs?** `comment_id` is the HN item id of the comment and never changes. Within one month, compare `comment_id` sets between runs of the same `thread_id`: new ids are new posts. A post that disappears was deleted or killed. Across months, group by `company` instead, since each month is a new thread with new ids.
 
 **What happens when a source fails?** This Actor reads one thread, so there are no partial error rows. If the thread id is not numeric, the item is deleted or dead, or no recent "Who is hiring?" thread exists on the `whoishiring` account, the run fails with that message and nothing is charged. An individual comment that is deleted, dead or has no text is skipped silently.
-
-HN who is hiring API, Hacker News jobs feed, Ask HN who is hiring scraper alternative, HN hiring thread JSON, Hacker News Firebase jobs, monthly hiring thread dataset.

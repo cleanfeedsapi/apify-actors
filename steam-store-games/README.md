@@ -6,7 +6,7 @@
 - Minimal input: `{"listing": "topsellers", "maxApps": 50}`
 - Run it from the Console, the API, or the Apify MCP server; export JSON, CSV or Excel.
 
-Pull **Steam storefront** data into one JSON dataset: app details, store search, and topsellers / new / specials listings. Uses the same **public JSON** the Steam store website loads (`store.steampowered.com/api/...`). No HTML scraping, no login, no proxies, no API key for these storefront endpoints.
+Pull **Steam storefront** data into one JSON dataset: app details, store search, and topsellers / new / specials listings. Uses the same **public JSON** the Steam store website loads (`store.steampowered.com/api/...`). No HTML scraping, no login, no proxies, no API key for these storefront endpoints. These are undocumented storefront endpoints that may change without notice; robots.txt does not disallow them, which is not a licence.
 
 Pass app IDs, a search term, and/or a listing. You get one row per app: name, type, free flag, price, discount, release date, developers, publishers, genres, categories, platforms, metacritic, recommendations, header image, store URL.
 
@@ -55,7 +55,7 @@ IDs are collected in this order: `appIds` first, then `search` hits, then the `l
   "release_date": "Apr 18, 2011", "developers": ["Valve"], "publishers": ["Valve"],
   "genres": ["Action", "Adventure"], "categories": ["Single-player", "Co-op"],
   "platforms": { "windows": true, "mac": true, "linux": true },
-  "metacritic": 95, "recommendations": 350000, "header_image": "https://...",
+  "metacritic": 95, "recommendations": 350000, "header_image": "https://cdn.akamai.steamstatic.com/steam/apps/620/header.jpg",
   "url": "https://store.steampowered.com/app/620/" }
 ```
 
@@ -101,5 +101,3 @@ More feeds at [cleanfeeds.dev](https://cleanfeeds.dev).
 **How do I detect new and closed items between runs?** `app_id` is Steam's own identifier and never changes. For a listing such as `topsellers` or `specials`, keep each run's dataset and compare `app_id` sets: new ids entered the listing, missing ids left it. For a fixed `appIds` watchlist, compare `price_cents` and `discount_percent` per `app_id` instead.
 
 **What happens when a source fails?** There are no error rows in this Actor. An `appdetails` call that fails, returns `success: false`, or yields an incomplete row is logged with a warning and skipped, so the dataset holds only complete apps and only those are charged. If `featuredcategories` fails the Actor falls back to `search/results?json=1` for the listing. If `storesearch` or that fallback fails after the backoff retries, the run fails with the HTTP status in the message and nothing is charged.
-
-Steam store API, Steam appdetails, Steam topsellers JSON, Steam price API, Steam store search API, Steam game metadata.

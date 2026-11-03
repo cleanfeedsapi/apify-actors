@@ -36,7 +36,7 @@ Filter a sheet of **domains** (or emails, reduced to **domain only**) **before**
 | Step | Endpoint |
 |---|---|
 | Primary DoH | `https://dns.google/resolve?name={domain}&type=MX\|A` (JSON) |
-| Fallback DoH | `https://cloudflare-dns.com/dns-query?...` with `accept: application/dns-json` |
+| Fallback DoH | `https://cloudflare-dns.com/dns-query?name={domain}&type=MX\|A` with `accept: application/dns-json` |
 | Apex probe | `HEAD`/`GET` `https://{domain}` follow redirects, 8s timeout |
 
 ## Input examples
@@ -109,5 +109,3 @@ More feeds at [cleanfeeds.dev](https://cleanfeeds.dev).
 **How do I detect new and closed items between runs?** `domain` is the normalized key (lowercase, scheme, path and `www.` removed). Re-run the same list on a schedule and compare `verdict` per `domain` against the previous dataset: a domain that moved from `ok` to `no_mx` or `dead` has lost mail or hosting since the last check, and `checked_at` tells you when each run observed it.
 
 **What happens when a source fails?** Two layers. If an input is empty, malformed, or an email while `emailsAllowed` is `false`, the Actor pushes one row with `input: null`, `domain: null`, `error` and `checked_at`; that row is not charged and the rest continue. If the HTTPS probe times out or is refused, that is not an error: `http_status` and `final_url` are `null`, `redirect_to_other_domain` is `false`, and the DNS answers still decide the verdict. If both Google and Cloudflare DoH fail for a domain, that domain becomes an error row with the DoH status in the message.
-
-Domain MX check API, disposable email domain filter, dead domain preflight, DNS over HTTPS MX lookup, enrichment credit saver, Apollo Clay prefilter, NeverBounce alternative precheck.

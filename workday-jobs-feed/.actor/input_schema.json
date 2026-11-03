@@ -1,0 +1,31 @@
+{
+  "title": "ATS Jobs Feed input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "boards": {
+      "title": "Boards",
+      "type": "array",
+      "description": "Workday boards as workday:<slug> or pasted URLs (<tenant>.<wdN>.myworkdayjobs.com/<site>). This Actor accepts only Workday boards; other platforms are returned as one error row each.",
+      "editor": "stringList",
+      "prefill": [
+        "workday:adobe.wd5/external_experienced",
+        "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite"
+      ],
+      "default": [
+        "workday:adobe.wd5/external_experienced",
+        "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite"
+      ]
+    },
+    "maxJobsPerBoard": {
+      "title": "Max jobs per board",
+      "type": "integer",
+      "description": "0 = all",
+      "default": 500,
+      "minimum": 0
+    }
+  },
+  "required": [
+    "boards"
+  ]
+}

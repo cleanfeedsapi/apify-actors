@@ -21,7 +21,7 @@ Pull live **remote / hybrid job openings** from two public boards into **one JSO
 | Source | Endpoint | Notes |
 |---|---|---|
 | RemoteOK | `https://remoteok.com/api` | First array element is a legal notice (dropped). Name Remote OK + link back. |
-| Arbeitnow | `https://www.arbeitnow.com/api/job-board-api?page=` | Paginated; link back appreciated |
+| Arbeitnow | `https://www.arbeitnow.com/api/job-board-api?page=` | Paginated; Arbeitnow's terms of service apply |
 
 ## Input examples
 
@@ -44,7 +44,7 @@ Pull live **remote / hybrid job openings** from two public boards into **one JSO
 ```json
 { "source": "remoteok", "title": "Senior Backend Engineer", "company": "Acme", "location": "Worldwide",
   "remote": true, "tags": ["backend", "nodejs"], "salary": "$120000–$150000",
-  "url": "https://remoteOK.com/remote-jobs/...", "source_url": "https://remoteOK.com/remote-jobs/...",
+  "url": "https://remoteOK.com/remote-jobs/remote-senior-backend-engineer-acme-1137611", "source_url": "https://remoteOK.com/remote-jobs/remote-senior-backend-engineer-acme-1137611",
   "posted_at": "2026-11-01T08:00:12.000Z", "id": "1137611" }
 ```
 
@@ -84,9 +84,9 @@ Pay per event: **$2.00 per 1,000 job rows** (`job` event, $0.002 each) plus Apif
 
 - [ats-jobs-feed](https://apify.com/cleanfeedsapi/ats-jobs-feed): Greenhouse, Lever, Ashby, Workday, SmartRecruiters and Recruitee boards in one schema.
 - [hn-who-is-hiring](https://apify.com/cleanfeedsapi/hn-who-is-hiring): monthly Hacker News hiring thread as structured rows.
-- [greenhouse-jobs-api](https://apify.com/cleanfeedsapi/greenhouse-jobs-api): Greenhouse boards via the official Job Board API.
-- [lever-jobs-api](https://apify.com/cleanfeedsapi/lever-jobs-api): Lever postings via api.lever.co.
-- [ashby-jobs-api](https://apify.com/cleanfeedsapi/ashby-jobs-api): Ashby job boards via the posting API.
+- [greenhouse-jobs-feed](https://apify.com/cleanfeedsapi/greenhouse-jobs-feed): Greenhouse boards via the official Job Board API.
+- [lever-jobs-feed](https://apify.com/cleanfeedsapi/lever-jobs-feed): Lever postings via api.lever.co.
+- [ashby-jobs-feed](https://apify.com/cleanfeedsapi/ashby-jobs-feed): Ashby job boards via the posting API.
 
 Free sample dataset: [cleanfeeds/tech-jobs-daily on Hugging Face](https://huggingface.co/datasets/cleanfeeds/tech-jobs-daily). More feeds at [cleanfeeds.dev](https://cleanfeeds.dev).
 
@@ -94,14 +94,14 @@ Free sample dataset: [cleanfeeds/tech-jobs-daily on Hugging Face](https://huggin
 
 **Do I need API keys?** No. Both endpoints are public JSON.
 
-**Is this HTML scraping?** No. Only documented public JSON APIs.
+**Is this HTML scraping?** No. Only the public JSON endpoints both boards publish.
 
 **Why link back to Remote OK?** Their API ToS requires a follow-link and naming Remote OK as the source. This README and each row's `source_url` do that.
+
+**What attribution do I owe?** RemoteOK's API terms require a visible link back to the RemoteOK job page and a "Remote OK" credit wherever you republish rows; Arbeitnow requires accepting its terms of service (https://www.arbeitnow.com/). The dataset keeps the original job URL for this purpose; your downstream use must keep the link and credit.
 
 **One source 5xxs?** You get one `error` row for it; the run continues.
 
 **How do I detect new and closed items between runs?** `id` is the board's own identifier (RemoteOK job id, Arbeitnow slug) and does not change between runs. Keep each run's dataset and compare `id` sets per `source`: ids present today but not yesterday are new listings, ids present yesterday but not today were removed. Schedule the Actor daily and the diff is a few lines in n8n, Make or a script.
 
 **What happens when a source fails?** If a board returns an HTTP error or you pass a name other than `remoteok` or `arbeitnow`, the Actor logs it and pushes one row for that source with every field `null` (or `[]` / `false`) plus `error` holding the message. The other source still runs. Error rows are not charged. If the per-run charge limit is reached, the Actor stops after the source that hit it.
-
-remote jobs API, RemoteOK API, Arbeitnow API, remote job board JSON, remote developer jobs feed, remote job scraper alternative, hybrid jobs dataset.

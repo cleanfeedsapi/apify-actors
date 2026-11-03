@@ -7,6 +7,7 @@ const {
   thread = "latest",
   maxComments = 0,
   query = "",
+  redactEmails = false,
 } = (await Actor.getInput()) ?? {};
 
 let { thread: root, rows } = await fetchThreadJobs({ kind, thread, maxComments, query });
@@ -18,6 +19,7 @@ if (Actor.getChargingManager().getPricingInfo().isPayPerEvent) {
   if (eventChargeLimitReached) console.warn("max charge reached, trimmed rows");
 }
 
+if (redactEmails) for (const r of rows) for (const k of Object.keys(r)) if (typeof r[k] === "string") r[k] = r[k].replace(/[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g, "[email]");
 await Actor.pushData(rows);
 await Actor.setValue("SUMMARY", {
   kind,

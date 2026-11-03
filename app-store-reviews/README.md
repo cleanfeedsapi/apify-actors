@@ -12,9 +12,9 @@ Pull **Apple App Store customer reviews** and optional app metadata into a clean
 
 ## Why this instead of scraping or the vendor API
 
-- Apple's public RSS at `itunes.apple.com/rss/customerreviews/page=N/id=<app>/sortby=mostrecent/json` is a documented JSON feed, not the App Store web page. It needs no Apple ID, no developer account and no App Store Connect API key.
+- Apple's public RSS at `itunes.apple.com/rss/customerreviews/page=N/id=<app>/sortby=mostrecent/json` is an undocumented but long-stable RSS JSON endpoint, not the App Store web page. It needs no Apple ID, no developer account and no App Store Connect API key.
 - The feed gives 10 pages of about 50 reviews per app per storefront. The Actor walks pages 1 to `maxPages`, deduplicates on `review_id`, and stops early when a page is empty or Apple returns 400, so you get the full window without over-fetching.
-- Per-storefront, not just US. Pass any list of `countries` and each app is read per country. A pasted `apps.apple.com/<cc>/app/...` URL adds its own country automatically.
+- Per-storefront, not just US. Pass any list of `countries` and each app is read per country. A pasted URL such as `https://apps.apple.com/gb/app/whatsapp-messenger/id310633997` adds its own country (`gb`) automatically.
 - App metadata comes free from the same host. With `includeAppDetails` the `lookup` endpoint adds name, seller, average rating, rating count, price, genres and release date to the `APPS` record, and `search` resolves a term to app ids without you looking them up.
 - Reviewer names are not collected. Rows hold text, rating, version, date and id only, which keeps the dataset free of personal data you would have to manage.
 
@@ -60,7 +60,7 @@ A failed app/country fetch yields one row with `error` and the run continues.
 | Field | Type | Default | Notes |
 |---|---|---|---|
 | `appIds` | list | `284882215` | numeric ids |
-| `appUrls` | list | `[]` | parse `.../id{digits}` + country |
+| `appUrls` | list | `[]` | id and country parsed from URLs like `https://apps.apple.com/gb/app/whatsapp-messenger/id310633997` |
 | `search` | string | empty | iTunes `entity=software` search, first 25 hits in the first listed country |
 | `countries` | list | `us` | ISO alpha-2 storefronts |
 | `maxPages` | 1 to 10 | `10` | hard-capped at 10 |
@@ -124,12 +124,12 @@ More feeds at [cleanfeeds.dev](https://cleanfeeds.dev).
 
 **Is this HTML scraping?** No. RSS/lookup/search JSON only.
 
-**Can I paste an App Store URL?** Yes. Country + id are parsed from `apps.apple.com/{cc}/app/.../id{digits}`.
+**Are there limits or terms on Apple's side?** Apple's Search/Lookup API is rate limited to roughly 20 calls per minute per IP and Apple's terms allow its content for promoting App Store content; the reviews feed may change without notice.
+
+**Can I paste an App Store URL?** Yes. Country and id are parsed from the URL: `https://apps.apple.com/gb/app/whatsapp-messenger/id310633997` gives `gb` and `310633997`.
 
 **Where are app details?** Key-value record `APPS` (and `APPS_SEARCH` when you use search).
 
 **How do I detect new and closed items between runs?** `review_id` is Apple's id for the review and does not change. The feed is sorted by most recent, so schedule the Actor daily, keep each run's dataset and compare `review_id` sets per `app_id` and `country`: ids present today but not yesterday are new reviews. A review that disappears was removed by the user or by Apple. Rows are deduplicated on `review_id` within a run.
 
 **What happens when a source fails?** Three cases, none of which stop the run. A pasted URL that does not match the App Store pattern yields a row with `url`, `app_id: null` and `error`. A failing `search` yields one row with `error` starting with `search:`. For an app and country pair, the Actor first tries `lookup`; if that fails it only logs a warning and `app_name` stays `null`. If the first RSS page fails, it pushes one row with `app_id`, `country` and `error` and moves on. If a later page fails, it keeps the reviews already collected. Error rows are not charged.
-
-Apple App Store reviews API, iTunes customer reviews RSS, iOS app review scraper alternative, app lookup JSON, software search itunes.

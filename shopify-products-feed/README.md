@@ -12,8 +12,8 @@ No HTML scraping, no login, no proxies, no Storefront API token.
 
 ## Why this instead of scraping or the vendor API
 
-- `https://<shop>/products.json` and `/collections/<handle>/products.json` are JSON endpoints Shopify serves for every storefront. The Actor reads them in pages of 250, not the rendered product pages.
-- No Admin API, no Storefront API token, no app install. Those need the merchant's consent and credentials; this reads what the shop already publishes to the public.
+- `https://<shop>/products.json` and `/collections/<handle>/products.json` are JSON endpoints most storefronts expose; a merchant can turn them off. The Actor reads them in pages of 250, not the rendered product pages.
+- No Admin API, no Storefront API token, no app install. Those need the merchant's consent and credentials; this reads the public `products.json` of a storefront (where exposed).
 - The delta is built in. Pass `onlyChangedSince` with an ISO timestamp and only products whose `updated_at` is strictly after it are kept, which turns a daily schedule into a change feed for price and stock moves.
 - Collection scope cuts the catalog to what you care about. With `collections` set, only those handles are read, applied to every shop in the list.
 - Polite by default: two shops in parallel, 500 ms between pages, and a 40-product default cap so an empty-input run finishes in minutes. Rows missing id, handle, title or URL are dropped before charging.
@@ -81,7 +81,7 @@ Empty input works: two sample shops, 40 products each, no delta.
   "max_price": 50,
   "currency": null,
   "available": false,
-  "image": "https://cdn.shopify.com/...",
+  "image": "https://cdn.shopify.com/s/files/1/1104/4168/products/A12513W050_1.jpg",
   "first_variant_sku": "A12513W050"
 }
 ```
@@ -123,12 +123,10 @@ More feeds at [cleanfeeds.dev](https://cleanfeeds.dev).
 
 **Why did one shop return an error row?** Some hosts block or remove `products.json` (e.g. `www.gymshark.com` returns 403 while `gymshark.com` returns 200). Others return HTML. The Actor records `error` and continues.
 
-**robots.txt / ToS?** See Actor NOTES. Prefer merchant permission / official Storefront API for production commerce apps. Rate: **2 shops concurrent**, **500ms** between pages.
+**Is this allowed by Shopify?** Shopify's Terms of Service restrict automated access to storefronts, and `products.json` is unauthenticated but not documented for third parties. Use this feed for your own stores or stores whose owners agreed; for production commerce apps use the official Storefront API with merchant permission. Some stores disable `products.json` or block automated requests; those return one error row. Rate: **2 shops concurrent**, **500ms** between pages.
 
 **Currency null?** Storefront `products.json` prices are bare numbers/strings without ISO currency.
 
 **How do I detect new and closed items between runs?** `product_id` is Shopify's numeric product id and does not change, even when the handle is edited. Keep each run's dataset and compare `product_id` sets per `shop`: ids present today but not yesterday are new products, ids present yesterday but not today were unpublished or deleted. For price and stock changes on existing products, use `onlyChangedSince` instead of a full diff, or compare `min_price`, `max_price` and `available` per `product_id`.
 
 **What happens when a source fails?** Shops are independent. If a shop's `products.json` returns a non-2xx status, returns something that is not JSON, or `onlyChangedSince` cannot be parsed, the Actor pushes one row for that shop with every product field `null` (or `[]`, `0`, `false`) plus `error` holding the message, and the other shops still complete. Error rows are not charged. A product that lacks an id, handle, title or URL is dropped silently rather than reported.
-
-Shopify products.json API, Shopify storefront catalog feed, Shopify price monitor, Shopify stock availability JSON, collection products.json scraper alternative, Shopify public product feed.

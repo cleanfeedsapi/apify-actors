@@ -18,12 +18,12 @@ You pass boards (`greenhouse:stripe`, `lever:spotify`, `ashby:ramp`, `workday:ad
 | Lever | `lever:<company>` or `https://jobs.lever.co/<company>` | api.lever.co/v0/postings (official) |
 | Ashby | `ashby:<company>` or `https://jobs.ashbyhq.com/<company>` | api.ashbyhq.com/posting-api (official) |
 | Workday | `workday:<tenant>.<wdN>/<site>` or `https://<tenant>.<wdN>.myworkdayjobs.com/<site>` | career-site CXS jobs JSON (public, paginated) |
-| SmartRecruiters | `smartrecruiters:<CompanyIdentifier>` or `https://jobs.smartrecruiters.com/<Company>` | api.smartrecruiters.com/v1 postings (official) |
+| SmartRecruiters | `smartrecruiters:<CompanyIdentifier>` or `https://jobs.smartrecruiters.com/<Company>` | api.smartrecruiters.com/v1 postings (documented Posting API) |
 | Recruitee | `recruitee:<subdomain>` or `https://<subdomain>.recruitee.com` | `<subdomain>.recruitee.com/api/offers` (public) |
 
 ## Why this instead of scraping or the vendor API
 
-- Every source is the JSON the career page itself loads. Greenhouse, Lever, Ashby and SmartRecruiters publish official job-board APIs; Workday and Recruitee sites expose public JSON behind their JavaScript front ends. No browser, no rendering, nothing to fix when a theme changes.
+- Every source is the JSON the career page itself loads. Greenhouse, Lever and Ashby publish official job-board APIs, SmartRecruiters documents a public Posting API; Workday and Recruitee are public JSON endpoints the source's own pages load. No browser, no rendering, nothing to fix when a theme changes.
 - No keys. All six endpoints are unauthenticated. You never need Harvest, Lever Data API, Workday tenant credentials or a SmartRecruiters token.
 - One schema instead of six. Each ATS names and nests fields differently; the Actor maps all of them to the same nine columns so a target-account list with mixed ATSs produces one flat table.
 - Pasted URLs are recognized for all six, including `job-boards.greenhouse.io` and localized Workday paths like `/en-US/<site>`.
@@ -86,14 +86,16 @@ Schedule the Actor daily, keep the dataset per run, and compare `id` sets. Or wi
 - **Apify API**: `POST https://api.apify.com/v2/acts/cleanfeedsapi~ats-jobs-feed/run-sync-get-dataset-items?token=<APIFY_TOKEN>` with the input JSON as the body. The response is the dataset, ready to parse.
 - **Scheduling**: open the Actor in the Apify Console, click Schedule, pick a cron (for example daily at 06:00) and the saved input runs on its own. Each run keeps its own dataset.
 - **n8n, Make, Zapier**: use the Apify integration in each tool, choose this Actor and pass the same input JSON. No per-Actor setup, no custom code.
-- **Apify MCP server for AI agents**: connect the Apify MCP server to Claude, Cursor or any MCP client and ask the agent to run `cleanfeedsapi/ats-jobs-feed` with these inputs.
+- **Apify MCP server for AI agents**: connect the Apify MCP server to Claude, Cursor or any MCP client and ask the agent to run `cleanfeedsapi/ats-jobs-feed` with these inputs. Use this Actor when the list mixes ATS platforms; for one platform the single-platform feeds in the next section cost $1.50 per 1,000.
 
 ## Related Actors by CleanFeeds
 
-- [greenhouse-jobs-api](https://apify.com/cleanfeedsapi/greenhouse-jobs-api): Greenhouse only, $1.50 per 1,000 rows.
-- [lever-jobs-api](https://apify.com/cleanfeedsapi/lever-jobs-api): Lever only, same schema.
-- [ashby-jobs-api](https://apify.com/cleanfeedsapi/ashby-jobs-api): Ashby only, same schema.
-- [workday-jobs-api](https://apify.com/cleanfeedsapi/workday-jobs-api): Workday only, with a 500-row default cap per site.
+This Actor mixes six ATS platforms in one run; the single-platform feeds below are cheaper when you only need one.
+
+- [greenhouse-jobs-feed](https://apify.com/cleanfeedsapi/greenhouse-jobs-feed): Greenhouse only, $1.50 per 1,000 rows.
+- [lever-jobs-feed](https://apify.com/cleanfeedsapi/lever-jobs-feed): Lever only, same schema.
+- [ashby-jobs-feed](https://apify.com/cleanfeedsapi/ashby-jobs-feed): Ashby only, same schema.
+- [workday-jobs-feed](https://apify.com/cleanfeedsapi/workday-jobs-feed): Workday only, with a 500-row default cap per site.
 - [remote-jobs-feed](https://apify.com/cleanfeedsapi/remote-jobs-feed): RemoteOK and Arbeitnow remote listings in one schema.
 
 Free sample dataset: [cleanfeeds/tech-jobs-daily on Hugging Face](https://huggingface.co/datasets/cleanfeeds/tech-jobs-daily). More feeds at [cleanfeeds.dev](https://cleanfeeds.dev).
@@ -102,7 +104,7 @@ Free sample dataset: [cleanfeeds/tech-jobs-daily on Hugging Face](https://huggin
 
 **Do I need an ATS API key?** No. Every source is a public, unauthenticated endpoint.
 
-**Is this HTML scraping?** No. Greenhouse, Lever, Ashby and SmartRecruiters publish official job-board APIs; Workday and Recruitee career sites load their job lists from public JSON endpoints that this Actor reads directly.
+**Is this HTML scraping?** No. Greenhouse, Lever and Ashby publish official job-board APIs, SmartRecruiters documents a public Posting API; Workday and Recruitee career sites load their job lists from public JSON endpoints that this Actor reads directly.
 
 **Why is `department` or `posted_at` empty for some rows?** The ATS does not return it in its list payload. Fields are never guessed.
 
@@ -113,5 +115,3 @@ Free sample dataset: [cleanfeeds/tech-jobs-daily on Hugging Face](https://huggin
 **How do I detect new and closed items between runs?** `id` is the ATS-side job id (Greenhouse job id, Lever posting id, Ashby posting id, Workday requisition id, SmartRecruiters posting id, Recruitee offer id) and does not change between runs. Keep each run's dataset and compare `id` sets per `company`: ids present today but not yesterday are new roles, ids present yesterday but not today are closed.
 
 **What happens when a source fails?** A board that returns an HTTP error, an unknown slug or an unrecognized URL does not stop the run. The Actor logs the failure, pushes one row with `source`, `company` and `error` (the message), and continues with the next board. Error rows are not charged. If the per-run charge limit is reached, the Actor stops after the board that hit it and the remaining boards are skipped.
-
-Greenhouse jobs API, Lever jobs API, Ashby jobs API, Workday jobs API, SmartRecruiters jobs API, Recruitee jobs API, ATS job scraper alternative, career site jobs feed.
