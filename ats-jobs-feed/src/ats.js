@@ -13,6 +13,38 @@ const post = async (url, body) => {
 };
 
 
+// Workday lists only "Posted Today" / "Posted Yesterday" / "Posted N Days Ago" / "Posted 30+ Days Ago".
+// Map it to a UTC midnight date (day precision); "30+" and unknown text -> null.
+export function postedOnToDate(text, now = new Date()) {
+  const t = String(text ?? "").toLowerCase();
+  let days = /today/.test(t) ? 0 : /yesterday/.test(t) ? 1 : (t.match(/(\d+)\s*days?\s*ago/) || [])[1];
+  if (days == null || /\+/.test(t)) return null;
+  const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - Number(days)));
+  return d.toISOString();
+}
+
+// Input filters, applied BEFORE Actor.charge so unwanted rows are never billed.
+// postedAfter: ISO date/datetime or a relative "24h" / "7d"; rows without posted_at are excluded when it is set.
+// titleIncludes: keep rows whose title contains ANY term (case-insensitive substring); titleExcludes: drop rows containing any term.
+export function applyFilters(rows, { postedAfter, titleIncludes = [], titleExcludes = [] } = {}, now = new Date()) {
+  let since = null;
+  if (postedAfter) {
+    const m = String(postedAfter).trim().match(/^(\d+)\s*([hd])$/i);
+    since = m ? new Date(now.getTime() - Number(m[1]) * (m[2].toLowerCase() === "h" ? 3600e3 : 86400e3)) : new Date(postedAfter);
+    if (isNaN(since)) throw new Error(`bad postedAfter "${postedAfter}" (use ISO date or e.g. 24h, 7d)`);
+  }
+  const inc = titleIncludes.map((s) => String(s).toLowerCase()).filter(Boolean);
+  const exc = titleExcludes.map((s) => String(s).toLowerCase()).filter(Boolean);
+  return rows.filter((r) => {
+    if (r.error) return true;
+    if (since && !(r.posted_at && new Date(r.posted_at) >= since)) return false;
+    const t = String(r.title ?? "").toLowerCase();
+    if (inc.length && !inc.some((s) => t.includes(s))) return false;
+    if (exc.some((s) => t.includes(s))) return false;
+    return true;
+  });
+}
+
 // Workday public CXS jobs API (same JSON the career site itself loads). Slug: "tenant.wdN/site".
 async function workday(slug, maxJobs = Infinity) {
   const m = String(slug).trim().match(/^([^/]+)\.([^/]+)\/(.+)$/);
@@ -34,7 +66,7 @@ async function workday(slug, maxJobs = Infinity) {
       rows.push({
         title: j.title ?? null, location: j.locationsText ?? null, department: null,
         url: j.externalPath ? `https://${host}/${site}${j.externalPath}` : null,
-        posted_at: null, updated_at: null, // list payload only carries relative "postedOn" text
+        posted_at: postedOnToDate(j.postedOn), updated_at: null, // day precision, derived from "Posted N Days Ago"
         id: j.bulletFields?.[0] != null ? String(j.bulletFields[0]) : j.externalPath,
       });
     }

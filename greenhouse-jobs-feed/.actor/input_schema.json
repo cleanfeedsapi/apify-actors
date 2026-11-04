@@ -25,6 +25,24 @@
       "description": "0 = all",
       "default": 0,
       "minimum": 0
+    },
+    "postedAfter": {
+      "title": "Posted after",
+      "type": "string",
+      "editor": "textfield",
+      "description": "Keep only jobs published after this point: an ISO date (2026-11-01) or a relative window (24h, 7d). Applied before billing. Jobs without a publish date are excluded when set (Workday gives day precision only; its \"30+ days ago\" postings have no date)."
+    },
+    "titleIncludes": {
+      "title": "Title includes (any)",
+      "type": "array",
+      "editor": "stringList",
+      "description": "Keep only jobs whose title contains at least one of these terms (case-insensitive substring). Applied before billing."
+    },
+    "titleExcludes": {
+      "title": "Title excludes",
+      "type": "array",
+      "editor": "stringList",
+      "description": "Drop jobs whose title contains any of these terms (case-insensitive substring). Applied before billing."
     }
   },
   "required": [

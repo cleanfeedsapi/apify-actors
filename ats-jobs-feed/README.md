@@ -44,6 +44,14 @@ You pass boards (`greenhouse:stripe`, `lever:spotify`, `ashby:ramp`, `workday:ad
 | `boards` | string list | three sample boards | `source:slug` or careers URL, any mix |
 | `maxJobsPerBoard` | integer | `0` | `0` = everything the board returns |
 
+## Filters are applied before billing
+
+`postedAfter` (ISO date or `24h` / `7d`), `titleIncludes` (keep if the title contains any term) and `titleExcludes` (drop if it contains any term) are applied to the rows read from the ATS **before** the pay-per-event charge, so you never pay for jobs you filtered out. Matching is case-insensitive substring; there is no fuzzy or AI matching, so what you see is what was matched. Dates come from the ATS itself (`first_published`, `createdAt`, `publishedAt`, `releasedDate`, `published_at`), not from when we indexed the job; Workday only publishes "Posted N Days Ago", so its `posted_at` has day precision and "30+ days ago" postings have no date and are excluded when `postedAfter` is set.
+
+```json
+{ "boards": ["greenhouse:stripe", "lever:spotify"], "postedAfter": "24h", "titleIncludes": ["engineer", "developer"], "titleExcludes": ["intern", "staffing"] }
+```
+
 ## Output example
 
 ```json
